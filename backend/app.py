@@ -12,5 +12,8 @@ db.init_app(app)
 def home():
     return "Trekking Management App Backend Running"
 
+with app.app_context():
+    db.create_all()
+
 if __name__ == "__main__":
     app.run(debug=True)
