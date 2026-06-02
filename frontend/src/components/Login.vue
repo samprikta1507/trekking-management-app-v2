@@ -42,6 +42,12 @@ export default {
                 const response = await axios.post('http://localhost:5000/api/login', this.form)
 
                 alert(response.data.message)
+
+                localStorage.setItem('token', response.data.token)
+                localStorage.setItem('role', response.data.role)
+                localStorage.setItem('email', response.data.email)
+
+
                 const role = response.data.role
 
                 if (role === 'admin') {

@@ -2,14 +2,20 @@ from flask import Flask, request, jsonify
 from models import db, User, StaffProfile, Trek, Booking
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 
 app = Flask(__name__)
-CORS(app)
+
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///trekking.sqlite3"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["JWT_SECRET_KEY"] = "my-secret-key"
+
+CORS(app)
 
 db.init_app(app)
+
+jwt = JWTManager(app)
 
 @app.route("/")
 def home():
@@ -78,12 +84,39 @@ def login():
         return jsonify({
             "message": "Invalid password"
         }), 401
+    
+    access_token = create_access_token(identity=user.email)
 
     return jsonify({
         "message": "Login successful",
+        "token": access_token,
         "role": user.role,
         "email": user.email
     }), 200
+
+@app.route("/api/admin/dashboard")
+@jwt_required()
+def admin_dashboard():
+
+    current_user = get_jwt_identity()
+
+    return jsonify({
+        "message": "Welcome Admin",
+        "user": current_user
+    })
+
+@app.route("/api/user/dashboard")
+@jwt_required()
+def user_dashboard():
+
+    current_user = get_jwt_identity()
+
+    return jsonify({
+        "message": "Welcome User",
+        "user": current_user
+    })
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
