@@ -1,7 +1,7 @@
 <template>
     <div>
         <h1>User Registration</h1>
-        <form>
+        <form @submit.prevent="handleRegister">
             <div>
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" v-model="form.username" required>
@@ -9,6 +9,10 @@
             <div>
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" v-model="form.email" required>
+            </div>
+            <div>
+                <label for="phone">Phone:</label>
+                <input type="text" id="phone" name="phone" v-model="form.phone" required>
             </div>
             <div>
                 <label for="password">Password:</label>
@@ -33,6 +37,7 @@ export default {
             form: {
                 username: '',
                 email: '',
+                phone: '',
                 password: ''
             }
         }
@@ -40,11 +45,20 @@ export default {
     methods: {
         async handleRegister() {
             try {
-                await axios.post('http://localhost:5000/api/register', this.form)
+                const response = await axios.post('http://localhost:5000/api/register', this.form)
+
+                alert(response.data.message)
+
+                this.form.username = ''
+                this.form.email = ''
+                this.form.phone = ''
+                this.form.password = ''
+
                 this.$emit('register-success')
+
             } catch (error) {
-                console.error('Registration failed:', error)
-            }
+                console.error(error)
+            }   
         }
     }
 }
