@@ -59,5 +59,31 @@ def register():
         "message": "User registered successfully"
     }), 201  
 
+@app.route("/api/login", methods=["POST"])
+def login():
+
+    data = request.get_json()
+
+    email = data.get("email")
+    password = data.get("password")
+
+    user = User.query.filter_by(email=email).first()
+
+    if not user:
+        return jsonify({
+            "message": "User not found"
+        }), 404
+
+    if not check_password_hash(user.password_hash, password):
+        return jsonify({
+            "message": "Invalid password"
+        }), 401
+
+    return jsonify({
+        "message": "Login successful",
+        "role": user.role,
+        "email": user.email
+    }), 200
+
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,21 +1,12 @@
 <template>
     <div>
-        <userRegister />
+        <h1>User Dashboard</h1>
+        <p>Welcome User!</p>
     </div>
-
 </template>
 
 <script>
-import UserRegister from '../components/UserRegister.vue'
-export default{
-    name: 'UserView',
-    components: {
-        UserRegister
-    },
-    data() {
-        return {
-        }
-    }
+export default {
+    name: 'UserView'
 }
-
 </script>

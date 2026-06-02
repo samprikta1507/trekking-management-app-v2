@@ -1,23 +1,17 @@
 <template>
   <div>
-    <div>
-        <div @click="$router.push('/admin')">
-            Admin view 
-        </div>
+    <h1>Trekking Management App</h1>
+
+    <div @click="$router.push('/register')">
+      Register
     </div>
-    <div>
-        <div @click="$router.push('/user')">
-            User view
-        </div>
-    </div>
-    <div>
-        <div @click="$router.push('/staff')">
-            Staff view
-        </div>
+
+    <div @click="$router.push('/login')">
+      Login
     </div>
 
   </div>
-</template> 
+</template>
 
 <script>
 export default {

@@ -1,7 +1,11 @@
 <template>
-  <AdminDashboard />
+    <div>
+        <h1>Admin Dashboard</h1>
+    </div>
 </template>
 
-<script setup>
-import AdminDashboard from '../components/AdminDashboard.vue'
+<script>
+export default {
+    name: 'AdminView'
+}
 </script>
