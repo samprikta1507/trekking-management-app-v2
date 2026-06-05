@@ -1,11 +1,17 @@
 <template>
     <div>
-        <h1>Admin Dashboard</h1>
+        <AdminDashboard />
     </div>
 </template>
 
 <script>
+import AdminDashboard from '../components/AdminDashboard.vue'
+
 export default {
-    name: 'AdminView'
+    name: 'AdminView',
+
+    components: {
+        AdminDashboard
+    }
 }
 </script>

@@ -180,6 +180,108 @@ def create_staff():
         "message": "Staff created successfully"
     }), 201
 
+@app.route("/api/admin/staff", methods=["GET"])
+@jwt_required()
+def get_staff():
+
+    admin = admin_required()
+
+    if not admin:
+        return jsonify({
+            "message": "Access Denied"
+        }), 403
+
+    staff_members = User.query.filter_by(role="staff").all()
+
+    staff_list = []
+
+    for staff in staff_members:
+
+        staff_profile = StaffProfile.query.filter_by(user_id=staff.id).first()
+        
+        staff_list.append({
+            "id": staff.id,
+            "name": staff.name,
+            "email": staff.email,
+            "phone": staff.phone,
+            "experience_years": staff_profile.experience_years if staff_profile else 0,
+            "specialization": staff_profile.specialization if staff_profile else ""
+        })
+
+    return jsonify(staff_list), 200
+
+@app.route("/api/admin/delete-staff/<int:staff_id>", methods=["DELETE"])
+@jwt_required()
+def delete_staff(staff_id):
+
+    admin = admin_required()
+
+    if not admin:
+        return jsonify({
+            "message": "Access Denied"
+        }), 403
+
+    staff_user = User.query.filter_by(id=staff_id,role="staff").first()
+
+    if not staff_user:
+        return jsonify({
+            "message": "Staff not found"
+        }), 404
+
+    staff_profile = StaffProfile.query.filter_by(user_id=staff_user.id).first()
+
+    if staff_profile:
+        db.session.delete(staff_profile)
+
+    db.session.delete(staff_user)
+
+    db.session.commit()
+
+    return jsonify({
+        "message": "Staff deleted successfully"
+    }), 200
+
+@app.route("/api/admin/update-staff/<int:staff_id>", methods=["PUT"])
+@jwt_required()
+def update_staff(staff_id):
+
+    admin = admin_required()
+
+    if not admin:
+        return jsonify({
+            "message": "Access Denied"
+        }), 403
+
+    staff_user = User.query.filter_by(id=staff_id,role="staff").first()
+
+    if not staff_user:
+        return jsonify({
+            "message": "Staff not found"
+        }), 404
+
+    data = request.get_json()
+
+    staff_user.name = data.get("name")
+    staff_user.email = data.get("email")
+    staff_user.phone = data.get("phone")
+
+    staff_profile = StaffProfile.query.filter_by(user_id=staff_user.id).first()
+
+    if staff_profile:
+
+        staff_profile.experience_years = data.get(
+            "experience_years"
+        )
+
+        staff_profile.specialization = data.get(
+            "specialization"
+        )
+
+    db.session.commit()
+
+    return jsonify({
+        "message": "Staff updated successfully"
+    }), 200
 
 @app.route("/api/user/dashboard")
 @jwt_required()
