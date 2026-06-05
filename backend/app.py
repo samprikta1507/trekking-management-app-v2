@@ -138,6 +138,49 @@ def admin_dashboard():
         "user": admin.email
     }), 200
 
+@app.route("/api/admin/create-staff", methods=["POST"])
+@jwt_required()
+def create_staff():
+
+    admin = admin_required()
+
+    if not admin:
+        return jsonify({
+            "message": "Access Denied"
+        }), 403
+
+    data = request.get_json()
+
+    name = data.get("name")
+    email = data.get("email")
+    phone = data.get("phone")
+    password = data.get("password")
+
+    experience_years = data.get("experience_years")
+    specialization = data.get("specialization")
+
+    existing_user = User.query.filter_by(email=email).first()
+
+    if existing_user:
+        return jsonify({
+            "message": "Email already exists"
+        }), 400
+    
+    staff_user = User(name=name,email=email,phone=phone,password_hash=generate_password_hash(password),role="staff")
+
+    db.session.add(staff_user)
+    db.session.commit()
+
+    staff_profile = StaffProfile(user_id=staff_user.id,experience_years=experience_years,specialization=specialization)
+
+    db.session.add(staff_profile)
+    db.session.commit()
+
+    return jsonify({
+        "message": "Staff created successfully"
+    }), 201
+
+
 @app.route("/api/user/dashboard")
 @jwt_required()
 def user_dashboard():
