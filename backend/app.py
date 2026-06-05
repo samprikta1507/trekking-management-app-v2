@@ -17,6 +17,34 @@ db.init_app(app)
 
 jwt = JWTManager(app)
 
+def admin_required():
+
+    current_user_email = get_jwt_identity()
+
+    user = User.query.filter_by(email=current_user_email).first()
+
+    if not user:
+        return None
+
+    if user.role != "admin":
+        return None
+
+    return user
+
+def user_required():
+
+    current_user_email = get_jwt_identity()
+
+    user = User.query.filter_by(email=current_user_email).first()
+
+    if not user:
+        return None
+
+    if user.role != "user":
+        return None
+
+    return user
+
 @app.route("/")
 def home():
     return "Trekking Management App Backend Running"
@@ -98,24 +126,33 @@ def login():
 @jwt_required()
 def admin_dashboard():
 
-    current_user = get_jwt_identity()
+    admin = admin_required()
+
+    if not admin:
+        return jsonify({
+            "message": "Access Denied"
+        }), 403
 
     return jsonify({
         "message": "Welcome Admin",
-        "user": current_user
-    })
+        "user": admin.email
+    }), 200
 
 @app.route("/api/user/dashboard")
 @jwt_required()
 def user_dashboard():
 
-    current_user = get_jwt_identity()
+    user = user_required()
+
+    if not user:
+        return jsonify({
+            "message": "Access Denied"
+        }), 403
 
     return jsonify({
         "message": "Welcome User",
-        "user": current_user
-    })
-
+        "user": user.email
+    }), 200
 
 
 if __name__ == "__main__":
