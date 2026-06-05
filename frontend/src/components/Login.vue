@@ -18,6 +18,10 @@
 
         </form>
     </div>
+    <p>
+      Don't have an account?
+      <a @click="$router.push('/register')">Register</a>
+    </p>
 </template>
 
 <script>

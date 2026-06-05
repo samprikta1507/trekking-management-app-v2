@@ -22,7 +22,10 @@
         </form>
 
     </div>
-
+    <p>
+        Already have an account?
+        <a @click="$router.push('/login')">Login</a>
+    </p>
 
 </template>
 
