@@ -3,6 +3,7 @@ from models import db, User, StaffProfile, Trek, Booking
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -201,6 +202,7 @@ def get_staff():
         
         staff_list.append({
             "id": staff.id,
+            "staff_profile_id": staff_profile.id,
             "name": staff.name,
             "email": staff.email,
             "phone": staff.phone,
@@ -281,6 +283,141 @@ def update_staff(staff_id):
 
     return jsonify({
         "message": "Staff updated successfully"
+    }), 200
+
+@app.route("/api/admin/create-trek", methods=["POST"])
+@jwt_required()
+def create_trek():
+
+    admin = admin_required()
+
+    if not admin:
+        return jsonify({
+            "message": "Access Denied"
+        }), 403
+
+    data = request.get_json()
+
+    staff = StaffProfile.query.get(data.get("assigned_staff_id"))
+
+    if not staff:
+        return jsonify({
+            "message": "Assigned staff not found"
+        }), 404
+
+    new_trek = Trek(trek_name=data.get("trek_name"),location=data.get("location"),difficulty=data.get("difficulty"),duration_days=data.get("duration_days"),available_slots=data.get("available_slots"),assigned_staff_id=data.get("assigned_staff_id"),start_date=datetime.strptime(data.get("start_date"),"%Y-%m-%d").date(),end_date=datetime.strptime(data.get("end_date"),"%Y-%m-%d").date(),price=data.get("price"))
+
+    db.session.add(new_trek)
+    db.session.commit()
+
+    return jsonify({
+        "message": "Trek created successfully"
+    }), 201
+
+@app.route("/api/admin/treks", methods=["GET"])
+@jwt_required()
+def get_treks():
+
+    admin = admin_required()
+
+    if not admin:
+        return jsonify({
+            "message": "Access Denied"
+        }), 403
+
+    treks = Trek.query.all()
+
+    trek_list = []
+
+    for trek in treks:
+
+        trek_list.append({
+            "id": trek.id,
+            "trek_name": trek.trek_name,
+            "location": trek.location,
+            "difficulty": trek.difficulty,
+            "duration_days": trek.duration_days,
+            "available_slots": trek.available_slots,
+            "assigned_staff_id": trek.assigned_staff_id,
+            "status": trek.status,
+            "start_date": str(trek.start_date),
+            "end_date": str(trek.end_date),
+            "price": trek.price
+        })
+
+    return jsonify(trek_list), 200
+
+@app.route("/api/admin/update-trek/<int:trek_id>", methods=["PUT"])
+@jwt_required()
+def update_trek(trek_id):
+
+    admin = admin_required()
+
+    if not admin:
+        return jsonify({
+            "message": "Access Denied"
+        }), 403
+
+    trek = Trek.query.get(trek_id)
+
+    if not trek:
+        return jsonify({
+            "message": "Trek not found"
+        }), 404
+    
+    data = request.get_json()
+    staff = StaffProfile.query.get(data.get("assigned_staff_id"))
+
+    if not staff:
+        return jsonify({
+            "message": "Assigned staff not found"
+        }), 404
+    
+    trek.trek_name = data.get("trek_name")
+    trek.location = data.get("location")
+    trek.difficulty = data.get("difficulty")
+    trek.duration_days = data.get("duration_days")
+    trek.available_slots = data.get("available_slots")
+    trek.assigned_staff_id = data.get("assigned_staff_id")
+
+    trek.start_date = datetime.strptime(data.get("start_date"),"%Y-%m-%d").date()
+
+    trek.end_date = datetime.strptime(data.get("end_date"),"%Y-%m-%d").date()
+
+    trek.price = data.get("price")
+
+    trek.status = data.get("status")
+
+    db.session.commit()
+
+    return jsonify({
+        "message": "Trek updated successfully"
+    }), 200
+
+@app.route("/api/admin/delete-trek/<int:trek_id>", methods=["DELETE"])
+@jwt_required()
+def delete_trek(trek_id):
+
+    admin = admin_required()
+
+    if not admin:
+        return jsonify({
+            "message": "Access Denied"
+        }), 403
+
+    trek = Trek.query.get(trek_id)
+
+    if not trek:
+        return jsonify({
+            "message": "Trek not found"
+        }), 404
+    
+    db.session.delete(trek)
+    
+    db.session.commit()
+    
+    return jsonify({
+        "message": "Trek deleted successfully"
     }), 200
 
 @app.route("/api/user/dashboard")
