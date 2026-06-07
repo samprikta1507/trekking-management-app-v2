@@ -2,6 +2,8 @@
     <div>
         <h1>Admin Dashboard</h1>
 
+        <button @click="logout">Logout</button>
+
         <!-- TAB BUTTONS -->
         <div style="margin-bottom: 20px;">
             <button @click="activeTab = 'staff'">Staff</button>
@@ -41,6 +43,14 @@ export default {
     data() {
         return {
             activeTab: 'staff'
+        }
+    },
+    methods: {
+        logout() {
+            localStorage.removeItem('token')
+            localStorage.removeItem('role')
+            
+            this.$router.push('/login')
         }
     }
 }
