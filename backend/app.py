@@ -108,6 +108,11 @@ def login():
         return jsonify({
             "message": "User not found"
         }), 404
+    
+    if user.is_blacklisted:
+        return jsonify({
+            "message": "Your account has been blacklisted"
+        }), 403
 
     if not check_password_hash(user.password_hash, password):
         return jsonify({
@@ -418,6 +423,58 @@ def delete_trek(trek_id):
     
     return jsonify({
         "message": "Trek deleted successfully"
+    }), 200
+
+@app.route("/api/admin/users", methods=["GET"])
+@jwt_required()
+def get_users():
+
+    admin = admin_required()
+
+    if not admin:
+        return jsonify({
+            "message": "Access Denied"
+        }), 403
+
+    users = User.query.filter_by(role="user").all()
+
+    user_list = []
+
+    for user in users:
+        user_list.append({
+            "id": user.id,
+            "name": user.name,
+            "email": user.email,
+            "is_blacklisted": user.is_blacklisted
+        })
+
+    return jsonify(user_list), 200
+
+@app.route("/api/admin/toggle-blacklist/<int:user_id>", methods=["PUT"])
+@jwt_required()
+def toggle_blacklist(user_id):
+
+    admin = admin_required()
+
+    if not admin:
+        return jsonify({
+            "message": "Access Denied"
+        }), 403
+
+    user = User.query.filter_by(id=user_id,role="user").first()
+
+    if not user:
+        return jsonify({
+            "message": "User not found"
+        }), 404
+
+    user.is_blacklisted = not user.is_blacklisted
+
+    db.session.commit()
+
+    return jsonify({
+        "message": "Blacklist status updated",
+        "is_blacklisted": user.is_blacklisted
     }), 200
 
 @app.route("/api/user/dashboard")
