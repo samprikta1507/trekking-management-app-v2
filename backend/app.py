@@ -8,6 +8,7 @@ from routes.auth_routes import auth_bp
 from routes.admin_routes import admin_bp
 from routes.trek_routes import trek_bp
 from routes.admin_user_routes import user_bp
+from routes.user_routes import user_dashboard_bp
 app = Flask(__name__)
 
 
@@ -23,6 +24,7 @@ app.register_blueprint(auth_bp)
 app.register_blueprint(admin_bp)
 app.register_blueprint(trek_bp)
 app.register_blueprint(user_bp)
+app.register_blueprint(user_dashboard_bp)
 
 jwt = JWTManager(app)
 

@@ -1,12 +1,17 @@
 <template>
     <div>
-        <h1>User Dashboard</h1>
-        <p>Welcome User!</p>
+        <UserDashboard />
     </div>
 </template>
 
 <script>
+import UserDashboard from '../components/UserDashboard.vue'
+
 export default {
-    name: 'UserView'
+    name: 'UserView',
+
+    components: {
+        UserDashboard
+    }
 }
 </script>

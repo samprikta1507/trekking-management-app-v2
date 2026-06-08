@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required
 from models import db, User, StaffProfile, Trek
 from datetime import datetime
+from werkzeug.security import generate_password_hash
 
 admin_bp = Blueprint('admin_bp', __name__)
 
@@ -40,11 +41,15 @@ def create_staff():
     if existing_user:
         return jsonify({"message": "Email already exists"}), 400
 
+    hashed_password = generate_password_hash(
+        data.get("password")
+    )
+    
     staff_user = User(
         name=data.get("name"),
         email=data.get("email"),
         phone=data.get("phone"),
-        password_hash=data.get("password"),
+        password_hash=hashed_password,
         role="staff"
     )
 
