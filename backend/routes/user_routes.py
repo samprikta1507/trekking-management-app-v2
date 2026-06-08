@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from models import Trek, Booking, User, db
@@ -103,3 +103,46 @@ def get_my_bookings():
         })
 
     return jsonify(booking_list), 200
+
+@user_dashboard_bp.route("/api/user/profile", methods=["GET"])
+@jwt_required()
+def get_profile():
+
+    current_user_email = get_jwt_identity()
+
+    user = User.query.filter_by(email=current_user_email).first()
+
+    if not user:
+        return jsonify({
+            "message": "User not found"
+        }), 404
+
+    return jsonify({
+        "name": user.name,
+        "email": user.email,
+        "phone": user.phone
+    }), 200
+
+@user_dashboard_bp.route("/api/user/profile", methods=["PUT"])
+@jwt_required()
+def update_profile():
+
+    current_user_email = get_jwt_identity()
+
+    user = User.query.filter_by(email=current_user_email).first()
+
+    if not user:
+        return jsonify({
+            "message": "User not found"
+        }), 404
+
+    data = request.get_json()
+
+    user.name = data.get("name")
+    user.phone = data.get("phone")
+
+    db.session.commit()
+
+    return jsonify({
+        "message": "Profile updated successfully"
+    }), 200

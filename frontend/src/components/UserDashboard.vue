@@ -96,7 +96,32 @@
         </div>
 
         <div v-if="activeTab === 'profile'">
-            <h2>Profile</h2>
+
+          <h2>Profile</h2>
+
+          <div>
+            <label>Name:</label>
+            <input type="text" v-model="profile.name">
+          </div>
+        
+          <br>
+        
+          <div>
+            <label>Email:</label>
+            <input type="email" v-model="profile.email" readonly>
+          </div>
+        
+          <br>
+        
+          <div>
+            <label>Phone:</label>
+            <input type="text" v-model="profile.phone">
+          </div>
+
+          <br><br>
+
+          <button @click="updateProfile">Save Profile</button>
+        
         </div>
 
     </div>
@@ -116,7 +141,13 @@ export default {
 
             selectedDifficulty: '',
             selectedLocation: '',
-            selectedDuration: ''
+            selectedDuration: '',
+
+            profile: {
+              name: '',
+              email: '',
+              phone: ''
+            }
         }
     },
 
@@ -213,6 +244,62 @@ export default {
               alert('Failed to load bookings')
           }
         },
+        async fetchProfile() {
+
+          try {
+          
+              const token = localStorage.getItem('token')
+          
+              const response = await axios.get(
+                  'http://localhost:5000/api/user/profile',
+                  {
+                      headers: {
+                          Authorization: `Bearer ${token}`
+                      }
+                  }
+              )
+                
+              this.profile = response.data
+                
+          }
+        
+          catch (error) {
+          
+              console.error(error)
+          
+              alert('Failed to load profile')
+          }
+        },
+        async updateProfile() {
+
+          try {
+          
+              const token = localStorage.getItem('token')
+          
+              const response = await axios.put(
+                  'http://localhost:5000/api/user/profile',
+                  {
+                      name: this.profile.name,
+                      phone: this.profile.phone
+                  },
+                  {
+                      headers: {
+                          Authorization: `Bearer ${token}`
+                      }
+                  }
+              )
+                
+              alert(response.data.message)
+                
+          }
+        
+          catch (error) {
+          
+              console.error(error)
+          
+              alert('Failed to update profile')
+          }
+        }
     },
 
     computed: {
@@ -250,6 +337,8 @@ export default {
       this.fetchTreks()
 
       this.fetchBookings()
+
+      this.fetchProfile()
     }
 }
 </script>
