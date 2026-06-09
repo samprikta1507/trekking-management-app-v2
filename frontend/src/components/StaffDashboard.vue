@@ -20,6 +20,43 @@
 
             <p><strong>Registered Trekkers:</strong> {{ trek.registered_trekkers }}</p>
 
+            <button @click="toggleParticipants(trek)">
+
+                {{ trek.showParticipants
+                    ? 'Hide Participants'
+                    : 'View Participants'
+                }}
+
+            </button>
+
+            <div v-if="trek.showParticipants && trek.participants.length">
+
+              <h4>Participants</h4>
+
+              <div v-for="participant in trek.participants" :key="participant.booking_id">
+              
+                  <p>
+                      {{ participant.user_name }}
+                      -
+                      {{ participant.email }}
+                  </p>
+                
+                  <p>
+                      Booking:
+                      {{ participant.booking_status }}
+                  </p>
+                
+                  <p>
+                      Payment:
+                      {{ participant.payment_status }}
+                  </p>
+                
+                  <hr>
+                
+              </div>
+            
+            </div>
+
             <h4>Update Slots</h4>
 
             <input type="number" v-model="trek.available_slots"/>
@@ -78,6 +115,11 @@ export default {
             )
 
             this.treks = response.data
+
+            this.treks.forEach(trek => {
+                trek.participants = []
+                trek.showParticipants = false
+            })
 
         }
         catch (error) {
@@ -145,6 +187,51 @@ export default {
                 console.error(error)
             
             }
+          
+        },
+
+        async loadParticipants(trek) {
+
+          try {
+          
+              const token = localStorage.getItem("token")
+          
+              const response = await axios.get(
+                  `http://127.0.0.1:5000/api/staff/participants/${trek.id}`,
+                  {
+                      headers: {
+                          Authorization: `Bearer ${token}`
+                      }
+                  }
+              )
+                
+              trek.participants = response.data
+                
+          }
+          catch (error) {
+          
+              console.error(error)
+          
+          }
+        
+        },
+
+        async toggleParticipants(trek) {
+
+            if (trek.showParticipants) {
+            
+                trek.showParticipants = false
+                return
+            
+            }
+          
+            if (trek.participants.length === 0) {
+            
+                await this.loadParticipants(trek)
+            
+            }
+          
+            trek.showParticipants = true
           
         },
       

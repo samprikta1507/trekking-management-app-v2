@@ -138,3 +138,45 @@ def update_status(trek_id):
     return jsonify({
         "message": "Status updated successfully"
     }), 200
+
+@staff_bp.route("/participants/<int:trek_id>", methods=["GET"])
+@jwt_required()
+def get_participants(trek_id):
+
+    current_user_email = get_jwt_identity()
+
+    user = User.query.filter_by(email=current_user_email).first()
+
+    if not user or user.role != "staff":
+        return jsonify({
+            "message": "Access denied"
+        }), 403
+
+    staff_profile = StaffProfile.query.filter_by(user_id=user.id).first()
+
+    trek = Trek.query.get(trek_id)
+
+    if not trek:
+        return jsonify({
+            "message": "Trek not found"
+        }), 404
+
+    # Ownership check
+    if trek.assigned_staff_id != staff_profile.id:
+        return jsonify({
+            "message": "You can only view your assigned treks"
+        }), 403
+
+    participants = []
+
+    for booking in trek.bookings:
+
+        participants.append({
+            "booking_id": booking.id,
+            "user_name": booking.user.name,
+            "email": booking.user.email,
+            "booking_status": booking.status,
+            "payment_status": booking.payment_status
+        })
+
+    return jsonify(participants), 200
