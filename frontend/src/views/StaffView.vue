@@ -1,11 +1,17 @@
 <template>
     <div>
-        <h1>Staff Dashboard</h1>
+        <StaffDashboard />
     </div>
 </template>
 
 <script>
+import StaffDashboard from '../components/StaffDashboard.vue'
+
 export default {
-    name: 'StaffView'
+    name: 'StaffView',
+
+    components: {
+        StaffDashboard
+    }
 }
 </script>
