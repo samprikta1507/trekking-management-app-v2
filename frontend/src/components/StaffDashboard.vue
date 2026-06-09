@@ -3,6 +3,8 @@
 
         <h1>Staff Dashboard</h1>
 
+        <button @click="logout">Logout</button>
+
         <h2>My Assigned Treks</h2>
 
         <div v-for="trek in treks" :key="trek.id">
@@ -233,6 +235,15 @@ export default {
           
             trek.showParticipants = true
           
+        },
+
+        logout() {
+
+            localStorage.removeItem("token")
+            localStorage.removeItem("role")
+
+            this.$router.push("/login")
+
         },
       
     }
