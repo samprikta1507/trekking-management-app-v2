@@ -89,6 +89,8 @@
             <p><strong>Status:</strong> {{ booking.status }}</p>
         
             <p><strong>Payment:</strong> {{ booking.payment_status }}</p>
+
+            <button v-if="booking.payment_status === 'Pending' && booking.status !== 'Cancelled' "@click="payBooking(booking.id)">Pay Now</button>
         
             <p><strong>Booking Date:</strong> {{ booking.booking_date }}</p>
         
@@ -338,7 +340,41 @@ export default {
             
             }
         
+        },
+        
+        async payBooking(bookingId) {
+                
+            try {
+            
+                const token = localStorage.getItem('token')
+            
+                const response = await axios.put(
+                    `http://localhost:5000/api/user/pay-booking/${bookingId}`,
+                    {},
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                )
+                
+                alert(response.data.message)
+                
+                await this.fetchBookings()
+                
+            }
+        
+            catch (error) {
+            
+                alert(
+                    error.response?.data?.message ||
+                    'Payment failed'
+                )
+            
+            }
+        
         }
+
     },
 
     computed: {

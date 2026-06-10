@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from models import Trek, Booking, User, db
+from datetime import date
 
 user_dashboard_bp = Blueprint("user_dashboard_bp",__name__)
 
@@ -50,6 +51,11 @@ def book_trek(trek_id):
         return jsonify({
             "message": "Trek not found"
         }), 404
+    
+    if trek.end_date < date.today():
+        return jsonify({
+            "message": "This trek has already ended and cannot be booked"
+        }), 400
 
     existing_booking = Booking.query.filter(Booking.user_id == user.id,Booking.trek_id == trek.id,Booking.status == "Booked").first()
     if existing_booking:
@@ -155,6 +161,41 @@ def cancel_booking(booking_id):
 
     return jsonify({
         "message": "Booking cancelled successfully"
+    }), 200
+
+@user_dashboard_bp.route("/api/user/pay-booking/<int:booking_id>", methods=["PUT"])
+@jwt_required()
+def pay_booking(booking_id):
+
+    current_user_email = get_jwt_identity()
+
+    user = User.query.filter_by(email=current_user_email).first()
+
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+
+    booking = Booking.query.get(booking_id)
+
+    if not booking:
+        return jsonify({"message": "Booking not found"}), 404
+
+    if booking.user_id != user.id:
+        return jsonify({"message": "Access denied"}), 403
+
+    if booking.status == "Cancelled":
+        return jsonify({"message": "Cancelled bookings cannot be paid"}), 400
+
+    if booking.payment_status == "Paid":
+        return jsonify({
+            "message": "Booking already paid"
+        }), 400
+
+    booking.payment_status = "Paid"
+
+    db.session.commit()
+
+    return jsonify({
+        "message": "Payment successful"
     }), 200
 
 @user_dashboard_bp.route("/api/user/profile", methods=["GET"])
