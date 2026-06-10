@@ -9,6 +9,7 @@
             <button @click="activeTab = 'staff'">Staff</button>
             <button @click="activeTab = 'trek'">Trek</button>
             <button @click="activeTab = 'user'">Users</button>
+            <button @click="activeTab = 'history'">Booking History</button>
         </div>
 
         <!-- SECTIONS -->
@@ -24,6 +25,10 @@
             <UserManagement />
         </div>
 
+        <div v-if="activeTab === 'history'">
+            <BookingHistory />
+        </div>
+
     </div>
 </template>
 
@@ -32,13 +37,15 @@ import axios from 'axios'
 import StaffManagement from './StaffManagement.vue'
 import TrekManagement from './TrekManagement.vue'
 import UserManagement from './UserManagement.vue'
+import BookingHistory from './BookingHistory.vue'
 
 export default {
     name: 'AdminDashboard',
     components: {
         StaffManagement,
         TrekManagement,
-        UserManagement
+        UserManagement,
+        BookingHistory
     },
     data() {
         return {

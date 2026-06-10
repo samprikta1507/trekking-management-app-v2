@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required
-from models import db, User
+from models import db, User, StaffProfile, Trek, Booking
 
 user_bp = Blueprint('user_bp', __name__)
 
@@ -40,3 +40,24 @@ def toggle_blacklist(user_id):
         "is_blacklisted": user.is_blacklisted
     }), 200
 
+@user_bp.route("/api/admin/bookings", methods=["GET"])
+@jwt_required()
+def get_all_bookings():
+
+    bookings = Booking.query.all()
+
+    booking_list = []
+
+    for booking in bookings:
+
+        booking_list.append({
+            "booking_id": booking.id,
+            "user_name": booking.user.name,
+            "user_email": booking.user.email,
+            "trek_name": booking.trek.trek_name,
+            "booking_date": str(booking.booking_date),
+            "status": booking.status,
+            "payment_status": booking.payment_status
+        })
+
+    return jsonify(booking_list), 200
