@@ -59,12 +59,6 @@
             
             </div>
 
-            <h4>Update Slots</h4>
-
-            <input type="number" v-model="trek.available_slots"/>
-
-            <button @click="updateSlots(trek)">Update Slots</button>
-
             <h4>Update Status</h4>
 
             <select v-model="trek.status">
@@ -134,35 +128,6 @@ export default {
 
     methods: {
 
-        async updateSlots(trek) {
-        
-            try {
-            
-                const token = localStorage.getItem("token")
-            
-                await axios.put(
-                    `http://127.0.0.1:5000/api/staff/update-slots/${trek.id}`,
-                    {
-                        available_slots: trek.available_slots
-                    },
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
-                    }
-                )
-                  
-                alert("Slots updated successfully")
-                  
-            }
-            catch (error) {
-            
-                console.error(error)
-            
-            }
-          
-        },
-      
         async updateStatus(trek) {
         
             try {

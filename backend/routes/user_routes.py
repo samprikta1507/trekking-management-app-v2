@@ -51,11 +51,16 @@ def book_trek(trek_id):
             "message": "Trek not found"
         }), 404
 
-    existing_booking = Booking.query.filter_by(user_id=user.id,trek_id=trek.id).first()
+    existing_booking = Booking.query.filter(Booking.user_id == user.id,Booking.trek_id == trek.id,Booking.status != "Cancelled").first()
 
     if existing_booking:
         return jsonify({
             "message": "You have already booked this trek"
+        }), 400
+
+    if trek.status != "Open":
+        return jsonify({
+            "message": "Booking is allowed only for Open treks"
         }), 400
 
     if trek.available_slots <= 0:
@@ -68,6 +73,9 @@ def book_trek(trek_id):
     db.session.add(booking)
 
     trek.available_slots -= 1
+
+    if trek.available_slots == 0:
+        trek.status = "Closed"
 
     db.session.commit()
 
@@ -97,12 +105,58 @@ def get_my_bookings():
         booking_list.append({
             "id": booking.id,
             "trek_name": booking.trek.trek_name,
+            "location": booking.trek.location,
+            "start_date": str(booking.trek.start_date),
+            "end_date": str(booking.trek.end_date),
             "booking_date": str(booking.booking_date),
             "status": booking.status,
             "payment_status": booking.payment_status
         })
 
     return jsonify(booking_list), 200
+
+@user_dashboard_bp.route("/api/user/cancel-booking/<int:booking_id>", methods=["PUT"])
+@jwt_required()
+def cancel_booking(booking_id):
+
+    current_user_email = get_jwt_identity()
+
+    user = User.query.filter_by(email=current_user_email).first()
+
+    if not user:
+        return jsonify({
+            "message": "User not found"
+        }), 404
+
+    booking = Booking.query.get(booking_id)
+
+    if not booking:
+        return jsonify({
+            "message": "Booking not found"
+        }), 404
+
+    if booking.user_id != user.id:
+        return jsonify({
+            "message": "Access denied"
+        }), 403
+
+    if booking.status == "Cancelled":
+        return jsonify({
+            "message": "Booking already cancelled"
+        }), 400
+
+    booking.status = "Cancelled"
+
+    booking.trek.available_slots += 1
+
+    if booking.trek.status == "Closed":
+        booking.trek.status = "Open"
+
+    db.session.commit()
+
+    return jsonify({
+        "message": "Booking cancelled successfully"
+    }), 200
 
 @user_dashboard_bp.route("/api/user/profile", methods=["GET"])
 @jwt_required()

@@ -80,17 +80,22 @@
         
             <h3>{{ booking.trek_name }}</h3>
         
-            <p>Status: {{ booking.status }}</p>
+            <p><strong>Location:</strong> {{ booking.location }}</p>
         
-            <p>Payment: {{ booking.payment_status }}</p>
+            <p><strong>Start Date:</strong> {{ booking.start_date }}</p>
         
-            <p>
-                Booking Date:
-                {{ booking.booking_date }}
-            </p>
-          
+            <p><strong>End Date:</strong> {{ booking.end_date }}</p>
+        
+            <p><strong>Status:</strong> {{ booking.status }}</p>
+        
+            <p><strong>Payment:</strong> {{ booking.payment_status }}</p>
+        
+            <p><strong>Booking Date:</strong> {{ booking.booking_date }}</p>
+        
+            <button v-if="booking.status === 'Booked'" @click="cancelBooking(booking.id)">Cancel Booking</button>
+        
             <hr>
-          
+        
           </div>
       
         </div>
@@ -299,6 +304,40 @@ export default {
           
               alert('Failed to update profile')
           }
+        },
+        async cancelBooking(bookingId) {
+                
+            try {
+            
+                const token = localStorage.getItem('token')
+            
+                const response = await axios.put(
+                    `http://localhost:5000/api/user/cancel-booking/${bookingId}`,
+                    {},
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                )
+                
+                alert(response.data.message)
+                
+                this.fetchBookings()
+                
+                this.fetchTreks()
+                
+            }
+        
+            catch (error) {
+            
+                alert(
+                    error.response?.data?.message ||
+                    'Failed to cancel booking'
+                )
+            
+            }
+        
         }
     },
 

@@ -48,43 +48,6 @@ def get_my_treks():
 
     return jsonify(result), 200
 
-@staff_bp.route("/update-slots/<int:trek_id>", methods=["PUT"])
-@jwt_required()
-def update_slots(trek_id):
-
-    current_user_email = get_jwt_identity()
-
-    user = User.query.filter_by(email=current_user_email).first()
-
-    if not user or user.role != "staff":
-        return jsonify({
-            "message": "Access denied"
-        }), 403
-
-    staff_profile = StaffProfile.query.filter_by(user_id=user.id).first()
-
-    trek = Trek.query.get(trek_id)
-
-    if not trek:
-        return jsonify({
-            "message": "Trek not found"
-        }), 404
-
-    
-    if trek.assigned_staff_id != staff_profile.id:
-        return jsonify({
-            "message": "You can only manage your assigned treks"
-        }), 403
-
-    data = request.get_json()
-
-    trek.available_slots = data.get("available_slots")
-
-    db.session.commit()
-
-    return jsonify({
-        "message": "Slots updated successfully"
-    }), 200
 
 @staff_bp.route("/update-status/<int:trek_id>", methods=["PUT"])
 @jwt_required()
