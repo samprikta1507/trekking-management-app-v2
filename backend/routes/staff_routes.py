@@ -96,6 +96,14 @@ def update_status(trek_id):
 
     trek.status = new_status
 
+    if new_status == "Completed":
+
+        for booking in trek.bookings:
+        
+            if booking.status == "Booked":
+            
+                booking.status = "Completed"
+
     db.session.commit()
 
     return jsonify({

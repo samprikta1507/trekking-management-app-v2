@@ -51,8 +51,7 @@ def book_trek(trek_id):
             "message": "Trek not found"
         }), 404
 
-    existing_booking = Booking.query.filter(Booking.user_id == user.id,Booking.trek_id == trek.id,Booking.status != "Cancelled").first()
-
+    existing_booking = Booking.query.filter(Booking.user_id == user.id,Booking.trek_id == trek.id,Booking.status == "Booked").first()
     if existing_booking:
         return jsonify({
             "message": "You have already booked this trek"
