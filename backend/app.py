@@ -10,6 +10,7 @@ from routes.trek_routes import trek_bp
 from routes.admin_user_routes import user_bp
 from routes.user_routes import user_dashboard_bp
 from routes.staff_routes import staff_bp
+from routes.test_routes import test_bp
 app = Flask(__name__)
 
 
@@ -27,6 +28,7 @@ app.register_blueprint(trek_bp)
 app.register_blueprint(user_bp)
 app.register_blueprint(user_dashboard_bp)
 app.register_blueprint(staff_bp,url_prefix="/api/staff")
+app.register_blueprint(test_bp)
 
 jwt = JWTManager(app)
 
