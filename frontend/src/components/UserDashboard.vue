@@ -15,6 +15,16 @@
 
         <button @click="activeTab = 'profile'">Profile</button>
 
+        <div>
+            <button @click="exportTrekHistory" :disabled="isExporting" class="btn btn-primary">
+                <span v-if="isExporting">Generating CSV...</span>
+                <span v-else>📥 Export My Trek History</span>
+            </button>
+
+            <div v-if="exportMessage" class="alert alert-info mt-2">{{ exportMessage }}</div>
+        </div>
+        
+
         <hr>
 
         <div v-if="activeTab === 'treks'">
@@ -131,6 +141,8 @@
         
         </div>
 
+
+
     </div>
 </template>
 
@@ -154,7 +166,9 @@ export default {
               name: '',
               email: '',
               phone: ''
-            }
+            },
+            isExporting: false,
+            exportMessage: ''
         }
     },
 
@@ -373,6 +387,33 @@ export default {
             
             }
         
+        },
+
+        async exportTrekHistory() {
+            this.isExporting = true;
+            this.exportMessage = '';
+
+            try {
+                const token = localStorage.getItem('token');
+
+                const response = await axios.post(
+                    'http://localhost:5000/api/user/export-history',
+                    {},
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
+                
+                this.exportMessage = response.data.message;
+                
+            } catch (error) {
+                console.error("Export error:", error);
+                this.exportMessage = "Failed to trigger export.";
+            } finally {
+                this.isExporting = false;
+            }
         }
 
     },

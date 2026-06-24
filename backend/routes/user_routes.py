@@ -4,6 +4,9 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import Trek, Booking, User, db
 from datetime import date
 
+from tasks.reminder_tasks import export_trek_history
+import os
+
 user_dashboard_bp = Blueprint("user_dashboard_bp",__name__)
 
 
@@ -240,3 +243,17 @@ def update_profile():
     return jsonify({
         "message": "Profile updated successfully"
     }), 200
+
+@user_dashboard_bp.route('/api/user/export-history', methods=['POST'])
+@jwt_required()
+def trigger_export():
+    current_user_email = get_jwt_identity()
+    user = User.query.filter_by(email=current_user_email).first()
+    
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+        
+    # Trigger the Celery task and pass the user's ID
+    export_trek_history.delay(user.id)
+    
+    return jsonify({"message": "CSV Export started! You will be notified when it is ready."}), 202

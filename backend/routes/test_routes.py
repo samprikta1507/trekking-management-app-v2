@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify
 from tasks.test_tasks import test_task
-from tasks.reminder_tasks import daily_trek_reminder
+from tasks.reminder_tasks import daily_trek_reminder, monthly_activity_report
 
 test_bp = Blueprint("test_bp", __name__)
 
@@ -22,3 +22,8 @@ def run_reminder():
     return jsonify({
         "message": "Reminder task sent"
     })
+
+@test_bp.route("/api/test-report")
+def run_report():
+    monthly_activity_report.delay()
+    return jsonify({"message": "Report task sent"})
