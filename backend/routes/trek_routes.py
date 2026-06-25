@@ -2,12 +2,15 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required
 from models import db, Trek, StaffProfile
 from datetime import datetime
+from extensions import cache
 
 trek_bp = Blueprint('trek_bp', __name__)
 
 @trek_bp.route("/api/admin/treks", methods=["GET"])
 @jwt_required()
+@cache.cached(timeout=60)
 def get_treks():
+    print("WARNING: Fetching from SQLite Database!")
 
     treks = Trek.query.all()
 

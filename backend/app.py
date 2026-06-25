@@ -4,6 +4,8 @@ from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from datetime import datetime
+from extensions import cache
+
 from routes.auth_routes import auth_bp
 from routes.admin_routes import admin_bp
 from routes.trek_routes import trek_bp
@@ -18,6 +20,13 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///trekking.sqlite3"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["JWT_SECRET_KEY"] = "my-secret-key"
 
+app.config['CACHE_TYPE'] = 'RedisCache'
+app.config['CACHE_REDIS_HOST'] = 'localhost'
+app.config['CACHE_REDIS_PORT'] = 6379
+app.config['CACHE_REDIS_DB'] = 1 
+app.config['CACHE_DEFAULT_TIMEOUT'] = 300
+
+cache.init_app(app)
 CORS(app)
 
 db.init_app(app)
