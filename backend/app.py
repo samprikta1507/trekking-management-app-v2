@@ -4,7 +4,7 @@ from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from datetime import datetime
-from extensions import cache
+from extensions import cache, mail
 
 from routes.auth_routes import auth_bp
 from routes.admin_routes import admin_bp
@@ -26,10 +26,17 @@ app.config['CACHE_REDIS_PORT'] = 6379
 app.config['CACHE_REDIS_DB'] = 1 
 app.config['CACHE_DEFAULT_TIMEOUT'] = 300
 
+app.config['MAIL_SERVER'] = 'localhost'
+app.config['MAIL_PORT'] = 1025
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = False
+
 cache.init_app(app)
 CORS(app)
 
 db.init_app(app)
+
+mail.init_app(app)
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(admin_bp)

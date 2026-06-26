@@ -1,6 +1,8 @@
 from celery_worker import celery
 from datetime import date, timedelta
 from models import Trek, Booking, User 
+from flask_mail import Message
+from extensions import mail
 
 @celery.task
 def daily_trek_reminder():
@@ -63,8 +65,17 @@ def monthly_activity_report():
         
         admin_user = User.query.filter_by(role='admin').first()
         if admin_user:
-            print(f"--> [REPORT SENT] To Admin: {admin_user.email}")
-            print(html_report)
+        
+            with app.app_context():
+                msg = Message(
+                    subject="Monthly Trekking Activity Report",
+                    sender="admin@trek.com",
+                    recipients=[admin_user.email],
+                    html=html_report 
+                )
+                mail.send(msg)
+
+            print(f"--> [REPORT SENT] To Admin: {admin_user.email} via MailHog")
         else:
             print("No Admin found to send the report to.")
             
