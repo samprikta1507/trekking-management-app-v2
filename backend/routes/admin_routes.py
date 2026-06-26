@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required
-from models import db, User, StaffProfile, Trek
+from models import db, User, StaffProfile, Trek, Booking
 from datetime import datetime
 from werkzeug.security import generate_password_hash
 
@@ -110,3 +110,35 @@ def update_staff(staff_id):
     db.session.commit()
 
     return jsonify({"message": "Staff updated successfully"}), 200
+
+@admin_bp.route("/api/admin/summary", methods=["GET"])
+@jwt_required()
+def get_summary():
+    try:
+
+        total_treks = Trek.query.count()
+        total_users = User.query.filter_by(role='user').count()
+        total_staff = User.query.filter_by(role='staff').count()
+        total_bookings = Booking.query.count()
+        
+
+        approved_bookings = Booking.query.filter_by(status='Booked').count()
+        cancelled_bookings = Booking.query.filter_by(status='Cancelled').count()
+        
+
+        pending_payments = Booking.query.filter_by(payment_status='Pending').count()
+        
+        return jsonify({
+            "total_treks": total_treks,
+            "total_users": total_users,
+            "total_staff": total_staff,
+            "total_bookings": total_bookings,
+            "booking_stats": {
+                "booked": approved_bookings,
+                "cancelled": cancelled_bookings
+            },
+            "pending_payments": pending_payments
+        }), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
