@@ -1,27 +1,36 @@
 <template>
-    <div>
-        <h1>Login</h1>
-
+  <div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card text-bg-dark border-secondary shadow-lg" style="width: 100%; max-width: 400px;">
+      <div class="card-body p-5">
+        <div class="text-center mb-4">
+            <div class="mb-4">
+              <button class="btn btn-sm btn-outline-secondary" @click="$router.push('/')">
+                Back to Home
+              </button>
+            </div>
+            <h2 class="fw-bold text-info">Welcome Back</h2>
+            <p class="text-secondary small">Please sign in to your account</p>
+        </div>
+        
         <form @submit.prevent="handleLogin">
-
-            <div>
-                <label>Email:</label>
-                <input type="email" v-model="form.email" required>
-            </div>
-
-            <div>
-                <label>Password:</label>
-                <input type="password" v-model="form.password" required>
-            </div>
-
-            <button type="submit">Login</button>
-
+          <div class="mb-3">
+            <label class="form-label text-light small">Email Address</label>
+            <input type="email" class="form-control text-bg-dark border-secondary" v-model="form.email" required>
+          </div>
+          <div class="mb-4">
+            <label class="form-label text-light small">Password</label>
+            <input type="password" class="form-control text-bg-dark border-secondary" v-model="form.password" required>
+          </div>
+          <button type="submit" class="btn btn-primary w-100 py-2 fw-bold shadow-sm">Login</button>
         </form>
+        
+        <div class="text-center mt-4">
+          <span class="text-secondary small">Don't have an account? </span>
+          <a href="#" class="text-info text-decoration-none small fw-bold" @click.prevent="$router.push('/register')">Register Here</a>
+        </div>
+      </div>
     </div>
-    <p>
-      Don't have an account?
-      <a @click="$router.push('/register')">Register</a>
-    </p>
+  </div>
 </template>
 
 <script>
