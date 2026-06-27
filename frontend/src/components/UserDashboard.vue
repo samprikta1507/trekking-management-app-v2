@@ -1,149 +1,159 @@
 <template>
-    <div>
-
-        <h1>User Dashboard</h1>
-
-        <p>Welcome {{ email }}</p>
-
-        <button @click="logout">Logout</button>
-
-        <hr>
-
-        <button @click="activeTab = 'treks'">Available Treks</button>
-
-        <button @click="activeTab = 'bookings'">My Bookings</button>
-
-        <button @click="activeTab = 'profile'">Profile</button>
-
-        <div>
-            <button @click="exportTrekHistory" :disabled="isExporting" class="btn btn-primary">
-                <span v-if="isExporting">Generating CSV...</span>
-                <span v-else>📥 Export My Trek History</span>
-            </button>
-
-            <div v-if="exportMessage" class="alert alert-info mt-2">{{ exportMessage }}</div>
-        </div>
-        
-
-        <hr>
-
-        <div v-if="activeTab === 'treks'">
-
-          <h2>Available Treks</h2>
-          <hr>
-
-          <label>Difficulty:</label>
-
-          <select v-model="selectedDifficulty">
-          
-              <option value="">All</option>
-          
-              <option value="Easy">Easy</option>
-          
-              <option value="Moderate">Moderate</option>
-          
-              <option value="Hard">Hard</option>
-          
-          </select>
-
-          <br><br>
-
-          <label>Location:</label>
-
-          <input type="text" v-model="selectedLocation" placeholder="Search Location"/>
-
-          <br><br>
-
-          <label>Maximum Duration:</label>
-
-          <input type="number" v-model="selectedDuration"/>
-
-          <hr>
-
-          <div v-for="trek in filteredTreks" :key="trek.id">
-          
-              <h3>{{ trek.trek_name }}</h3>
-          
-              <p>Location: {{ trek.location }}</p>
-          
-              <p>Difficulty: {{ trek.difficulty }}</p>
-          
-              <p>Duration: {{ trek.duration_days }} Days</p>
-          
-              <p>Available Slots: {{ trek.available_slots }}</p>
-          
-              <p>Price: ₹{{ trek.price }}</p>
-
-              <button @click="bookTrek(trek.id)">Book Trek</button>
-          
-              <hr>
-          
-          </div>
-        
-        </div>
-
-        <div v-if="activeTab === 'bookings'">
-
-          <h2>My Bookings</h2>
-
-          <div v-for="booking in bookings" :key="booking.id">
-        
-            <h3>{{ booking.trek_name }}</h3>
-        
-            <p><strong>Location:</strong> {{ booking.location }}</p>
-        
-            <p><strong>Start Date:</strong> {{ booking.start_date }}</p>
-        
-            <p><strong>End Date:</strong> {{ booking.end_date }}</p>
-        
-            <p><strong>Status:</strong> {{ booking.status }}</p>
-        
-            <p><strong>Payment:</strong> {{ booking.payment_status }}</p>
-
-            <button v-if="booking.payment_status === 'Pending' && booking.status !== 'Cancelled' "@click="payBooking(booking.id)">Pay Now</button>
-        
-            <p><strong>Booking Date:</strong> {{ booking.booking_date }}</p>
-        
-            <button v-if="booking.status === 'Booked'" @click="cancelBooking(booking.id)">Cancel Booking</button>
-        
-            <hr>
-        
-          </div>
-      
-        </div>
-
-        <div v-if="activeTab === 'profile'">
-
-          <h2>Profile</h2>
-
-          <div>
-            <label>Name:</label>
-            <input type="text" v-model="profile.name">
-          </div>
-        
-          <br>
-        
-          <div>
-            <label>Email:</label>
-            <input type="email" v-model="profile.email" readonly>
-          </div>
-        
-          <br>
-        
-          <div>
-            <label>Phone:</label>
-            <input type="text" v-model="profile.phone">
-          </div>
-
-          <br><br>
-
-          <button @click="updateProfile">Save Profile</button>
-        
-        </div>
-
-
-
+  <div class="container mt-4">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="mb-1">User Dashboard</h2>
+        <p class="text-secondary mb-0">Welcome back, {{ email }}</p>
+      </div>
+      <button class="btn btn-outline-danger" @click="logout">Logout</button>
     </div>
+
+    <div class="d-flex justify-content-between mb-4 border-bottom border-secondary pb-3">
+      <div class="btn-group" role="group">
+        <button class="btn" :class="activeTab === 'treks' ? 'btn-primary' : 'btn-outline-secondary'" @click="activeTab = 'treks'">Available Treks</button>
+        <button class="btn" :class="activeTab === 'bookings' ? 'btn-primary' : 'btn-outline-secondary'" @click="activeTab = 'bookings'">My Bookings</button>
+        <button class="btn" :class="activeTab === 'profile' ? 'btn-primary' : 'btn-outline-secondary'" @click="activeTab = 'profile'">Profile</button>
+      </div>
+      
+      <button @click="exportTrekHistory" :disabled="isExporting" class="btn btn-success shadow-sm">
+        <span v-if="isExporting">
+          <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          Generating CSV...
+        </span>
+        <span v-else>
+          <i class="bi bi-download me-2"></i>Export My Trek History
+        </span>
+      </button>
+    </div>
+
+    <div v-if="exportMessage" class="alert alert-info shadow-sm">
+      {{ exportMessage }}
+    </div>
+
+    <div v-if="activeTab === 'treks'">
+      
+      <div class="card text-bg-dark border-secondary mb-4 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Find Your Next Adventure</h5>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label text-secondary small">Difficulty</label>
+              <select v-model="selectedDifficulty" class="form-select text-bg-dark border-secondary">
+                <option value="">All Levels</option>
+                <option value="Easy">Easy</option>
+                <option value="Moderate">Moderate</option>
+                <option value="Hard">Hard</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label text-secondary small">Location</label>
+              <input type="text" v-model="selectedLocation" class="form-control text-bg-dark border-secondary" placeholder="Search location...">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label text-secondary small">Max Duration (Days)</label>
+              <input type="number" v-model="selectedDuration" class="form-control text-bg-dark border-secondary" placeholder="e.g. 5">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-4" v-for="trek in filteredTreks" :key="trek.id">
+          <div class="card h-100 text-bg-dark border-secondary shadow-sm">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <h5 class="card-title text-info fw-bold mb-0">{{ trek.trek_name }}</h5>
+                <span class="badge" :class="trek.difficulty === 'Easy' ? 'bg-success' : (trek.difficulty === 'Moderate' ? 'bg-warning text-dark' : 'bg-danger')">
+                  {{ trek.difficulty }}
+                </span>
+              </div>
+              <h6 class="card-subtitle mb-3 text-secondary"><i class="bi bi-geo-alt-fill me-1"></i>{{ trek.location }}</h6>
+              
+              <ul class="list-unstyled small mb-4">
+                <li class="mb-1"><strong>Duration:</strong> {{ trek.duration_days }} Days</li>
+                <li class="mb-1"><strong>Slots Available:</strong> <span :class="trek.available_slots > 0 ? 'text-success' : 'text-danger'">{{ trek.available_slots }}</span></li>
+                <li class="fs-5 mt-2"><strong>₹{{ trek.price }}</strong></li>
+              </ul>
+            </div>
+            <div class="card-footer bg-transparent border-top border-secondary">
+              <button class="btn btn-primary w-100" @click="bookTrek(trek.id)" :disabled="trek.available_slots === 0">
+                {{ trek.available_slots > 0 ? 'Book This Trek' : 'Sold Out' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="activeTab === 'bookings'">
+      <h4 class="mb-4">My Bookings</h4>
+      <div class="row g-4">
+        <div class="col-md-6" v-for="booking in bookings" :key="booking.booking_id">
+          <div class="card text-bg-dark border-secondary shadow-sm">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <h5 class="card-title text-info fw-bold mb-0">{{ booking.trek_name }}</h5>
+                <span class="badge" :class="booking.status === 'Booked' ? 'bg-success' : (booking.status === 'Cancelled' ? 'bg-danger' : (booking.status === 'Completed' ? 'bg-primary' : 'bg-warning text-dark'))">
+                  {{ booking.status }}
+                </span>
+              </div>
+              
+              <p class="text-secondary small mb-3"><i class="bi bi-geo-alt-fill me-1"></i>{{ booking.location }}</p>
+              
+              <div class="p-3 bg-secondary bg-opacity-10 rounded border border-secondary mb-3">
+                <div class="row small">
+                  <div class="col-6 mb-2"><strong>Start:</strong><br>{{ booking.start_date }}</div>
+                  <div class="col-6 mb-2"><strong>End:</strong><br>{{ booking.end_date }}</div>
+                  <div class="col-6"><strong>Payment:</strong><br>
+                    <span :class="booking.payment_status === 'Paid' ? 'text-success' : 'text-warning'">{{ booking.payment_status }}</span>
+                  </div>
+                  <div class="col-6"><strong>Booked On:</strong><br>{{ booking.booking_date.split(' ')[0] }}</div>
+                </div>
+              </div>
+
+              <div class="d-flex gap-2">
+                <button v-if="booking.payment_status === 'Pending' && booking.status !== 'Cancelled'" class="btn btn-success flex-grow-1" @click="payBooking(booking.booking_id)">
+                  Pay Now
+                </button>
+                <button v-if="booking.status === 'Booked'" class="btn btn-outline-danger flex-grow-1" @click="cancelBooking(booking.booking_id)">
+                  Cancel Booking
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="activeTab === 'profile'" class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card text-bg-dark border-secondary shadow-sm">
+          <div class="card-body p-4">
+            <h4 class="card-title mb-4 border-bottom border-secondary pb-2">Profile Settings</h4>
+            
+            <div class="mb-3">
+              <label class="form-label text-secondary small">Name</label>
+              <input type="text" v-model="profile.name" class="form-control text-bg-dark border-secondary">
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label text-secondary small">Email (Read Only)</label>
+              <input type="email" v-model="profile.email" class="form-control text-bg-secondary border-secondary text-muted" readonly>
+            </div>
+            
+            <div class="mb-4">
+              <label class="form-label text-secondary small">Phone Number</label>
+              <input type="text" v-model="profile.phone" class="form-control text-bg-dark border-secondary">
+            </div>
+            
+            <button class="btn btn-primary w-100 py-2" @click="updateProfile">Save Profile Changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </template>
 
 <script>

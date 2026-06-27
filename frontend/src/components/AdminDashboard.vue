@@ -2,15 +2,15 @@
     <div>
         <h1>Admin Dashboard</h1>
 
-        <button @click="logout">Logout</button>
+        <button class="btn btn-outline-danger" @click="logout">Logout</button>
 
         <!-- TAB BUTTONS -->
         <div style="margin-bottom: 20px;">
-            <button @click="activeTab = 'staff'">Staff</button>
-            <button @click="activeTab = 'trek'">Trek</button>
-            <button @click="activeTab = 'user'">Users</button>
-            <button @click="activeTab = 'history'">Booking History</button>
-            <button @click="activeTab = 'summary'">Summary</button>
+            <button class="btn btn-outline-primary" @click="activeTab = 'staff'">Staff</button>
+            <button class="btn btn-outline-primary" @click="activeTab = 'trek'">Trek</button>
+            <button class="btn btn-outline-primary" @click="activeTab = 'user'">Users</button>
+            <button class="btn btn-outline-primary" @click="activeTab = 'history'">Booking History</button>
+            <button class="btn btn-outline-primary" @click="activeTab = 'summary'">Summary</button>
         </div>
 
         <!-- SECTIONS -->
