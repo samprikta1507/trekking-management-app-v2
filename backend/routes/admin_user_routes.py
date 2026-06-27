@@ -17,6 +17,7 @@ def get_users():
             "id": user.id,
             "name": user.name,
             "email": user.email,
+            "phone": user.phone,
             "is_blacklisted": user.is_blacklisted
         })
 

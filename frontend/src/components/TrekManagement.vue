@@ -1,88 +1,99 @@
 <template>
-        <h2>Trek Management</h2>
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="mb-0">Trek Management</h2>
+      <button class="btn btn-primary" @click="showTrekForm = !showTrekForm">
+        {{ showTrekForm ? 'Close Form' : 'Add New Trek' }}
+      </button>
+    </div>
 
-        <button @click="showTrekForm = !showTrekForm">Add Trek</button>
-        <div v-if="showTrekForm">
-
-            <h3>Create Trek</h3>
-
-            <form @submit.prevent="saveTrek">
-
-                <div>
-                    <label>Trek Name:</label>
-                    <input type="text" v-model="trekForm.trek_name">
-                </div>
-
-                <div>
-                    <label>Location:</label>
-                    <input type="text" v-model="trekForm.location">
-                </div>
-
-                <div>
-                    <label>Difficulty:</label>
-                    <input type="text" v-model="trekForm.difficulty">
-                </div>
-
-                <div>
-                    <label>Duration Days:</label>
-                    <input type="number" v-model="trekForm.duration_days">
-                </div>
-
-                <div>
-                    <label>Available Slots:</label>
-                    <input type="number" v-model="trekForm.available_slots">
-                </div>
-
-                <div>
-                    <label>Assigned Staff ID:</label>
-                    <input type="number" v-model="trekForm.assigned_staff_id">
-                </div>
-
-                <div>
-                    <label>Start Date:</label>
-                    <input type="date" v-model="trekForm.start_date">
-                </div>
-
-                <div>
-                    <label>End Date:</label>
-                    <input type="date" v-model="trekForm.end_date">
-                </div>
-
-                <div>
-                    <label>Price:</label>
-                    <input type="number" v-model="trekForm.price">
-                </div>
-
-                <button type="submit">{{ isEditingTrek ? 'Update Trek' : 'Create Trek' }}</button>
-
-            </form>
-
-        </div>
-
-        <h3>Trek List</h3>
-
-        <div v-for="trek in trekList" :key="trek.id">
+    <div v-if="showTrekForm" class="card text-bg-dark border-secondary mb-4">
+      <div class="card-body">
+        <h5 class="card-title mb-4 border-bottom border-secondary pb-2">
+          {{ isEditingTrek ? 'Update Trek' : 'Create Trek' }}
+        </h5>
         
-            <p>Trek Name: {{ trek.trek_name }}</p>
-        
-            <p>Location: {{ trek.location }}</p>
-        
-            <p>Difficulty: {{ trek.difficulty }}</p>
-        
-            <p>Duration: {{ trek.duration_days }} days</p>
-        
-            <p>Available Slots: {{ trek.available_slots }}</p>
-        
-            <p>Status: {{ trek.status }}</p>
-        
-            <p>Price: ₹{{ trek.price }}</p>
+        <form @submit.prevent="saveTrek">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Trek Name</label>
+              <input type="text" class="form-control text-bg-dark" v-model="trekForm.trek_name" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Location</label>
+              <input type="text" class="form-control text-bg-dark" v-model="trekForm.location" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Difficulty</label>
+              <input type="text" class="form-control text-bg-dark" v-model="trekForm.difficulty" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Duration (Days)</label>
+              <input type="number" class="form-control text-bg-dark" v-model="trekForm.duration_days" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Available Slots</label>
+              <input type="number" class="form-control text-bg-dark" v-model="trekForm.available_slots" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Assigned Staff ID</label>
+              <input type="number" class="form-control text-bg-dark" v-model="trekForm.assigned_staff_id" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Start Date</label>
+              <input type="date" class="form-control text-bg-dark" v-model="trekForm.start_date" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Price (₹)</label>
+              <input type="number" class="form-control text-bg-dark" v-model="trekForm.price" required>
+            </div>
+          </div>
+          <div class="mt-4 text-end">
+            <button type="submit" class="btn btn-success px-4">
+              {{ isEditingTrek ? 'Save Changes' : 'Create Trek' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
 
-            <button @click="editTrek(trek)">Edit</button>
-            <button @click="deleteTrek(trek.id)">Delete</button>
-        
-            <hr>
-        
-        </div>
+    <div class="table-responsive">
+      <table class="table table-dark table-striped table-hover align-middle border-secondary">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Difficulty</th>
+            <th>Duration</th>
+            <th>Slots</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="trek in trekList" :key="trek.id">
+            <td class="fw-bold">{{ trek.trek_name }}</td>
+            <td>{{ trek.location }}</td>
+            <td>{{ trek.difficulty }}</td>
+            <td>{{ trek.duration_days }} days</td>
+            <td>{{ trek.available_slots }}</td>
+            <td>₹{{ trek.price }}</td>
+            <td>
+              <span class="badge" :class="trek.status === 'Pending' ? 'bg-warning text-dark' : 'bg-success'">
+                {{ trek.status }}
+              </span>
+            </td>
+            <td class="text-end">
+              <button class="btn btn-sm btn-outline-info me-2" @click="editTrek(trek)">Edit</button>
+              <button class="btn btn-sm btn-outline-danger" @click="deleteTrek(trek.id)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+  </div>
 </template>
 
 <script>

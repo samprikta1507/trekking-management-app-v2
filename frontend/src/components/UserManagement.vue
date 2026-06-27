@@ -1,19 +1,39 @@
 <template>
-        <h2>User List</h2>
+  <div class="container mt-4">
+    <h2 class="mb-4">User List</h2>
 
-        <div v-for="user in userList" :key="user.id">
-        
-            <p>Name: {{ user.name }}</p>
-        
-            <p>Email: {{ user.email }}</p>
-        
-            <p>Blacklisted: {{ user.is_blacklisted }}</p>
-
-            <button @click="toggleBlacklist(user.id)">{{ user.is_blacklisted ? 'Unblacklist' : 'Blacklist' }}</button>
-        
-            <hr>
-        
-        </div>
+    <div class="table-responsive">
+      <table class="table table-dark table-striped table-hover align-middle">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="user in userList" :key="user.id">
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.phone }}</td>
+            <td>
+              <span class="badge" :class="user.is_blacklisted ? 'bg-danger' : 'bg-success'">
+                {{ user.is_blacklisted ? 'Blacklisted' : 'Active' }}
+              </span>
+            </td>
+            <td>
+              <button class="btn btn-sm" :class="user.is_blacklisted ? 'btn-outline-success' : 'btn-outline-danger'" @click="toggleBlacklist(user.id)">
+                {{ user.is_blacklisted ? 'Unblacklist' : 'Blacklist' }}
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+  </div>
 </template>
 
 <script>

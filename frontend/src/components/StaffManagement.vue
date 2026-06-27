@@ -1,63 +1,81 @@
 <template>
-    <button @click="showStaffForm = !showStaffForm">Add Staff</button>
-    <div v-if="showStaffForm">
-
-      <h3>Create Staff</h3>
-          
-      <form @submit.prevent="saveStaff">
-      
-          <div>
-              <label>Name:</label>
-              <input type="text" v-model="staffForm.name"required>
-          </div>
-        
-          <div>
-              <label>Email:</label>
-              <input type="email" v-model="staffForm.email" required>
-          </div>
-        
-          <div>
-              <label>Phone:</label>
-              <input type="text" v-model="staffForm.phone" required>
-          </div>
-        
-          <div>
-              <label>Password:</label>
-              <input type="password" v-model="staffForm.password" required>
-          </div>
-        
-          <div>
-              <label>Experience:</label>
-              <input type="number" v-model="staffForm.experience_years" required>
-          </div>
-        
-          <div>
-              <label>Specialization:</label>
-              <input type="text" v-model="staffForm.specialization" required>
-          </div>
-        
-          <button type="submit">{{ isEditing ? 'Update Staff' : 'Create Staff' }}</button>
-      </form>
-    
-      <hr>
-    
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="mb-0">Staff Management</h2>
+      <button class="btn btn-primary" @click="showStaffForm = !showStaffForm">
+        {{ showStaffForm ? 'Close Form' : 'Add New Staff' }}
+      </button>
     </div>
 
-    <h2>Staff List</h2>
-
-    <div v-for="staff in staffList" :key="staff.id">
-
-        <p>Name: {{ staff.name }}</p>
-        <p>Email: {{ staff.email }}</p>
-        <p>Phone: {{ staff.phone }}</p>
-
-        <button @click="deleteStaff(staff.id)">Delete</button>
-        <button @click="editStaff(staff)">Edit</button>
-
-        <hr>
-
+    <div v-if="showStaffForm" class="card text-bg-dark border-secondary mb-4">
+      <div class="card-body">
+        <h5 class="card-title mb-4 border-bottom border-secondary pb-2">
+          {{ editingStaffId ? 'Update Staff Member' : 'Create Staff Member' }}
+        </h5>
+        
+        <form @submit.prevent="saveStaff">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Name</label>
+              <input type="text" class="form-control text-bg-dark" v-model="staffForm.name" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control text-bg-dark" v-model="staffForm.email" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Phone</label>
+              <input type="text" class="form-control text-bg-dark" v-model="staffForm.phone" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Password</label>
+              <input type="password" class="form-control text-bg-dark" v-model="staffForm.password" :required="!editingStaffId">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Experience (Years)</label>
+              <input type="number" class="form-control text-bg-dark" v-model="staffForm.experience_years" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Specialization</label>
+              <input type="text" class="form-control text-bg-dark" v-model="staffForm.specialization" required>
+            </div>
+          </div>
+          <div class="mt-4 text-end">
+            <button type="submit" class="btn btn-success px-4">
+              {{ editingStaffId ? 'Save Changes' : 'Create Staff' }}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
 
+    <div class="table-responsive">
+      <table class="table table-dark table-striped table-hover align-middle border-secondary">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Specialization</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="staff in staffList" :key="staff.id">
+            <td>{{ staff.name }}</td>
+            <td>{{ staff.email }}</td>
+            <td>{{ staff.phone }}</td>
+            <td>{{ staff.specialization || 'General' }}</td>
+            <td class="text-end">
+              <button class="btn btn-sm btn-outline-info me-2" @click="editStaff(staff)">Edit</button>
+              <button class="btn btn-sm btn-outline-danger" @click="deleteStaff(staff.id)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+  </div>
 </template>
 
 <script>
