@@ -1,9 +1,11 @@
 @import './base.css';
 
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  max-width: none;
   font-weight: normal;
 }
 
@@ -28,8 +30,18 @@ a,
   }
 
   #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
+    display: block;
+    grid-template-columns: none;
+    padding: 0;
   }
+}
+
+.trek-status-select {
+  background-color: #212529;
+  color: #f8f9fa;
+}
+
+.trek-status-select option {
+  background-color: #212529;
+  color: #f8f9fa;
 }

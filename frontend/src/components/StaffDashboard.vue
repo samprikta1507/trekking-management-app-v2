@@ -29,7 +29,7 @@
             <div class="p-3 bg-secondary bg-opacity-10 rounded border border-secondary mb-4">
               <label class="form-label small text-secondary mb-2">Update Trek Status</label>
               <div class="input-group input-group-sm">
-                <select v-model="trek.status" class="form-select text-bg-dark border-secondary">
+                <select v-model="trek.status" class="form-select bg-dark text-light border-secondary trek-status-select">
                   <option>Open</option>
                   <option>Closed</option>
                   <option>Started</option>

@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid d-flex flex-column justify-content-center align-items-center min-vh-100 text-center">
+  <div class="container-fluid d-flex flex-column justify-content-center align-items-center text-center" style="min-height: 100vh;">
     
     <div class="mb-5">
       <h1 class="display-3 fw-bold text-info mb-3">Trekking Management</h1>

@@ -89,7 +89,7 @@
     <div v-if="activeTab === 'bookings'">
       <h4 class="mb-4">My Bookings</h4>
       <div class="row g-4">
-        <div class="col-md-6" v-for="booking in bookings" :key="booking.booking_id">
+        <div class="col-md-6" v-for="booking in bookings" :key="booking.id">
           <div class="card text-bg-dark border-secondary shadow-sm">
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-start mb-3">
@@ -113,10 +113,10 @@
               </div>
 
               <div class="d-flex gap-2">
-                <button v-if="booking.payment_status === 'Pending' && booking.status !== 'Cancelled'" class="btn btn-success flex-grow-1" @click="payBooking(booking.booking_id)">
+                <button v-if="booking.payment_status === 'Pending' && booking.status !== 'Cancelled'" class="btn btn-success flex-grow-1" @click="payBooking(booking.id)">
                   Pay Now
                 </button>
-                <button v-if="booking.status === 'Booked'" class="btn btn-outline-danger flex-grow-1" @click="cancelBooking(booking.booking_id)">
+                <button v-if="booking.status === 'Booked'" class="btn btn-outline-danger flex-grow-1" @click="cancelBooking(booking.id)">
                   Cancel Booking
                 </button>
               </div>
