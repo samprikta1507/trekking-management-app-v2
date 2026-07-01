@@ -126,7 +126,7 @@ def get_summary():
         cancelled_bookings = Booking.query.filter_by(status='Cancelled').count()
         
 
-        pending_payments = Booking.query.filter_by(payment_status='Pending').count()
+        pending_payments = Booking.query.filter(Booking.payment_status == 'Pending',Booking.status != 'Cancelled').count()
         
         return jsonify({
             "total_treks": total_treks,

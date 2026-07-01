@@ -6,7 +6,6 @@
               <button class="btn btn-outline-danger" @click="logout">Logout</button>
             </div>
 
-            <!-- TAB BUTTONS -->
             <div style="margin-bottom: 20px;">
                 <button class="btn btn-outline-primary" @click="activeTab = 'staff'">Staff</button>
                 <button class="btn btn-outline-primary" @click="activeTab = 'trek'">Trek</button>
@@ -15,7 +14,6 @@
                 <button class="btn btn-outline-primary" @click="activeTab = 'summary'">Summary</button>
             </div>
 
-            <!-- SECTIONS -->
             <div v-if="activeTab === 'staff'">
                 <StaffManagement />
             </div>

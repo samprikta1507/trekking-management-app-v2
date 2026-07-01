@@ -23,7 +23,6 @@ const router = createRouter({
   routes
 })
 
-// ADD GUARD AFTER router is created
 router.beforeEach((to, from, next) => {
 
   const token = localStorage.getItem('token')

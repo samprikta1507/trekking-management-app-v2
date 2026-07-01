@@ -29,6 +29,14 @@
           </div>
         </div>
         <div class="col-md-3">
+          <div class="card text-white bg-secondary mb-3 text-center">
+            <div class="card-body">
+              <h5 class="card-title">Total Staff</h5>
+              <h2 class="card-text">{{ summaryData.total_staff }}</h2>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
           <div class="card text-white bg-info mb-3 text-center">
             <div class="card-body">
               <h5 class="card-title">Total Bookings</h5>

@@ -253,7 +253,6 @@ def trigger_export():
     if not user:
         return jsonify({"message": "User not found"}), 404
         
-    # Trigger the Celery task and pass the user's ID
     export_trek_history.delay(user.id)
     
     return jsonify({"message": "CSV Export started! You will be notified when it is ready."}), 202

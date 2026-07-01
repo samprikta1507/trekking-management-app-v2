@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required
 from models import db, Trek, StaffProfile
-from datetime import datetime
+from datetime import datetime, timedelta
 from extensions import cache
 
 trek_bp = Blueprint('trek_bp', __name__)
@@ -43,6 +43,15 @@ def create_trek():
 
     if not staff:
         return jsonify({"message": "Assigned staff not found"}), 404
+    
+    start_date = datetime.strptime(data.get("start_date"), "%Y-%m-%d").date()
+    duration_days = int(data.get("duration_days"))
+
+    end_date_raw = data.get("end_date")
+    if end_date_raw:
+        end_date = datetime.strptime(end_date_raw, "%Y-%m-%d").date()
+    else:
+        end_date = start_date + timedelta(days=duration_days - 1)
 
     new_trek = Trek(
         trek_name=data.get("trek_name"),
@@ -51,8 +60,8 @@ def create_trek():
         duration_days=data.get("duration_days"),
         available_slots=data.get("available_slots"),
         assigned_staff_id=data.get("assigned_staff_id"),
-        start_date=datetime.strptime(data.get("start_date"), "%Y-%m-%d").date(),
-        end_date=datetime.strptime(data.get("end_date"), "%Y-%m-%d").date(),
+        start_date=start_date,
+        end_date=end_date,
         price=data.get("price")
     )
 
