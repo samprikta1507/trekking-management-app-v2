@@ -15,6 +15,11 @@ def register():
     phone = data.get("phone")
     password = data.get("password")
 
+    if len(password) < 8:
+        return jsonify({
+            "message": "Password must be at least 8 characters long."
+        }), 400
+
     hashed_password = generate_password_hash(password)
 
     existing_user = User.query.filter_by(email=email).first()

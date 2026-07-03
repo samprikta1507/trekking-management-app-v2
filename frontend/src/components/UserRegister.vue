@@ -27,7 +27,7 @@
           </div>
           <div class="mb-4">
             <label class="form-label text-light small">Password</label>
-            <input type="password" class="form-control text-bg-dark border-secondary" v-model="form.password" required>
+            <input type="password" class="form-control text-bg-dark border-secondary" v-model="form.password" minlength="8" required>
           </div>
           <button type="submit" class="btn btn-success w-100 py-2 fw-bold shadow-sm">Register</button>
         </form>

@@ -124,6 +124,7 @@ def get_summary():
 
         approved_bookings = Booking.query.filter_by(status='Booked').count()
         cancelled_bookings = Booking.query.filter_by(status='Cancelled').count()
+        completed_bookings = Booking.query.filter_by(status='Completed').count()
         
 
         pending_payments = Booking.query.filter(Booking.payment_status == 'Pending',Booking.status != 'Cancelled').count()
@@ -135,7 +136,8 @@ def get_summary():
             "total_bookings": total_bookings,
             "booking_stats": {
                 "booked": approved_bookings,
-                "cancelled": cancelled_bookings
+                "cancelled": cancelled_bookings,
+                "completed": completed_bookings
             },
             "pending_payments": pending_payments
         }), 200

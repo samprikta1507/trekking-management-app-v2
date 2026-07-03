@@ -82,11 +82,11 @@ const loading = ref(true)
 const error = ref(null)
 
 const chartData = ref({
-  labels: ['Booked', 'Cancelled'],
+  labels: ['Booked', 'Cancelled', 'Completed'],
   datasets: [
     {
-      backgroundColor: ['#28a745', '#dc3545'],
-      data: [0, 0]
+      backgroundColor: ['#28a745', '#dc3545', '#0d6efd'],
+      data: [0, 0, 0]
     }
   ]
 })
@@ -114,7 +114,8 @@ const fetchSummary = async () => {
     
     chartData.value.datasets[0].data = [
       data.booking_stats.booked,
-      data.booking_stats.cancelled
+      data.booking_stats.cancelled,
+      data.booking_stats.completed
     ]
     
   } catch (err) {
