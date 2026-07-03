@@ -1,6 +1,10 @@
-# Python
 __pycache__/
 *.pyc
-node_modules
 env/
+instance/
+*.sqlite3
 dump.rdb
+celerybeat-schedule
+node_modules/
+MailHog_linux_amd64
+backend/static/exports/*.csv
