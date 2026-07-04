@@ -8,7 +8,7 @@ trek_bp = Blueprint('trek_bp', __name__)
 
 @trek_bp.route("/api/admin/treks", methods=["GET"])
 @jwt_required()
-@cache.cached(timeout=60)
+@cache.cached(timeout=2)
 def get_treks():
     print("WARNING: Fetching from SQLite Database!")
 
