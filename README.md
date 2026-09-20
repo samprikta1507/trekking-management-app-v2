@@ -224,7 +224,7 @@ Make sure the following are installed:
 * Git
 ```text
 1. Clone the Repository
-git clone <[YOUR_GITHUB_REPOSITORY_URL](https://github.com/samprikta1507/trekking-management-app-v2.git)>
+git clone <(https://github.com/samprikta1507/trekking-management-app-v2.git)>
 cd trekking-management-app-v2
 
 2. Start the Backend
