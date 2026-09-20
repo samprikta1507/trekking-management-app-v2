@@ -96,6 +96,8 @@ The project follows a frontend-backend architecture, with a Vue.js frontend comm
         └────────────┘
 ```
 # 📂 Project Structure
+
+```text
 trekking-management-app-v2/
 │
 ├── backend/
@@ -159,3 +161,4 @@ trekking-management-app-v2/
 │       └── main.js
 │
 └── README.md
+```
