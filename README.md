@@ -162,3 +162,4 @@ trekking-management-app-v2/
 │
 └── README.md
 ```
+<img width="1312" height="1199" alt="ChatGPT Image Sep 20, 2026, 09_08_48 AM" src="https://github.com/user-attachments/assets/aaabde84-661d-4249-a94d-3f409c112695" />
