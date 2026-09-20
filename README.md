@@ -278,6 +278,10 @@ The application was tested during development to verify important functionality 
 
 * Background task functionality
 
+# 🎥 Project Demo
+A complete demonstration of the Trekking Management App will be available on YouTube.
+* Project Demonstration: https://youtu.be/hi0Omm-5yKU?si=aF_KTzid3Aneylkw
+
 # 📚 Academic Project
 ```text
 This project was developed as part of:
