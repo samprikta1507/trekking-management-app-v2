@@ -222,7 +222,7 @@ Make sure the following are installed:
 * Redis
 
 * Git
-
+```text
 1. Clone the Repository
 git clone <[YOUR_GITHUB_REPOSITORY_URL](https://github.com/samprikta1507/trekking-management-app-v2.git)>
 cd trekking-management-app-v2
@@ -252,3 +252,48 @@ npm install
 Start the Vue development server:
 npm run dev
 The frontend will then be available at the local development URL provided by Vite.
+```
+
+# 🧪 Testing
+
+The application was tested during development to verify important functionality including:
+
+* User authentication
+
+* Role-based access
+
+* Trek CRUD operations
+
+* User management
+
+* Staff management
+
+* Trek bookings
+
+* Dashboard functionality
+
+* API functionality
+
+* Redis connectivity
+
+* Background task functionality
+
+# 📚 Academic Project
+```text
+This project was developed as part of:
+Indian Institute of Technology Madras
+BS Degree in Data Science and Applications
+Modern Application Development II (MAD2)
+```
+
+# ✅ Project Status
+```text
+Completed
+The Trekking Management App V2 was developed, tested, and submitted as the MAD2 project.
+```
+
+# 👩‍💻 Author
+```text
+SAMPRIKTA MALIK
+IIT Madras — BS Degree in Data Science and Applications
+```
