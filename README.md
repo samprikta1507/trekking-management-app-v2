@@ -163,3 +163,22 @@ trekking-management-app-v2/
 └── README.md
 ```
 <img width="1312" height="1199" alt="ChatGPT Image Sep 20, 2026, 09_08_48 AM" src="https://github.com/user-attachments/assets/aaabde84-661d-4249-a94d-3f409c112695" />
+
+# 🗄️ Database Design
+The application uses SQLite as the database with SQLAlchemy ORM.
+
+Main Entities:
+
+* User — Stores user authentication and role information.
+
+* StaffProfile — Stores staff-specific information.
+
+* Trek — Stores trek details and management information.
+
+* Booking — Stores trek booking information and relationships between users and treks.
+
+The database design was created using an ER diagram to represent the relationships between the application's main entities.
+
+# ER-Diagram:
+<img width="940" height="627" alt="image" src="https://github.com/user-attachments/assets/b1f33019-272d-42e1-9ed4-d6e958741bd7" />
+
