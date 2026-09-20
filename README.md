@@ -182,3 +182,28 @@ The database design was created using an ER diagram to represent the relationshi
 # ER-Diagram:
 <img width="940" height="627" alt="image" src="https://github.com/user-attachments/assets/b1f33019-272d-42e1-9ed4-d6e958741bd7" />
 
+# 🔐 Authentication & Authorization
+
+The application uses JWT-based authentication. Users are assigned roles such as:
+
+* Admin
+
+* Staff
+
+* Trekker
+
+Role-based access control ensures that users can access only the features available to their respective roles. For example:
+
+* Trekkers can make bookings.
+
+* Staff can manage their assigned treks and participants.
+
+* Admins have access to overall application management.
+
+# ⚡ Redis & Celery
+
+Redis
+Redis is used in the application for API caching to improve the efficiency of frequently accessed data.
+
+Celery
+Celery is used to handle background tasks so that time-consuming operations can be processed asynchronously instead of blocking the main Flask application. Redis acts as the supporting service for the Celery task system.
