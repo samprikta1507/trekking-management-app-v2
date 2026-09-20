@@ -94,3 +94,68 @@ The project follows a frontend-backend architecture, with a Vue.js frontend comm
         │   SQLite   │                    Redis
         │  Database  │
         └────────────┘
+```
+# 📂 Project Structure
+trekking-management-app-v2/
+│
+├── backend/
+│   │
+│   ├── instance/
+│   │   └── trekking.sqlite3
+│   │
+│   ├── routes/
+│   │   ├── admin_routes.py
+│   │   ├── admin_user_routes.py
+│   │   ├── auth_routes.py
+│   │   ├── staff_routes.py
+│   │   ├── test_routes.py
+│   │   ├── trek_routes.py
+│   │   └── user_routes.py
+│   │
+│   ├── static/
+│   │   └── exports/
+│   │       └── trek_history_user_11.csv
+│   │
+│   ├── tasks/
+│   │
+│   ├── app.py
+│   ├── celery_worker.py
+│   ├── celerybeat-schedule
+│   ├── extensions.py
+│   ├── models.py
+│   └── requirements.txt
+│
+├── frontend/
+│   │
+│   ├── public/
+│   │
+│   └── src/
+│       ├── assets/
+│       │
+│       ├── components/
+│       │   ├── AdminDashboard.vue
+│       │   ├── AdminSummary.vue
+│       │   ├── BookingHistory.vue
+│       │   ├── Login.vue
+│       │   ├── StaffDashboard.vue
+│       │   ├── StaffManagement.vue
+│       │   ├── TrekManagement.vue
+│       │   ├── UserDashboard.vue
+│       │   ├── UserManagement.vue
+│       │   └── UserRegister.vue
+│       │
+│       ├── router/
+│       │   └── index.js
+│       │
+│       ├── views/
+│       │   ├── AdminView.vue
+│       │   ├── LandingView.vue
+│       │   ├── LoginView.vue
+│       │   ├── RegisterView.vue
+│       │   ├── StaffView.vue
+│       │   └── UserView.vue
+│       │
+│       ├── App.vue
+│       └── main.js
+│
+└── README.md
