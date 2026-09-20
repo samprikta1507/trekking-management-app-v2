@@ -1,5 +1,6 @@
 from celery import Celery
 from celery.schedules import crontab
+# from datetime import timedelta
 
 celery = Celery(
     "trekking_app",
@@ -10,7 +11,7 @@ celery = Celery(
 celery.conf.beat_schedule = {
     'send-daily-trek-reminders': {
         'task': 'tasks.reminder_tasks.daily_trek_reminder',
-        'schedule': crontab(hour=9, minute=0),
+        'schedule': crontab(hour=9, minute=0), # timedelta(seconds=5),
     },
     'send-monthly-activity-report': {
         'task': 'tasks.reminder_tasks.monthly_activity_report',
