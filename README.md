@@ -202,8 +202,25 @@ Role-based access control ensures that users can access only the features availa
 
 # ⚡ Redis & Celery
 
-Redis
+Redis:
 Redis is used in the application for API caching to improve the efficiency of frequently accessed data.
 
-Celery
+Celery:
 Celery is used to handle background tasks so that time-consuming operations can be processed asynchronously instead of blocking the main Flask application. Redis acts as the supporting service for the Celery task system.
+
+# 🚀 Running the Project
+
+Prerequisites
+Make sure the following are installed:
+
+* Python
+
+* Node.js
+
+* npm
+
+* Redis
+
+* Git
+
+1. Clone the Repository
