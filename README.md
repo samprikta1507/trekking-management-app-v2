@@ -224,3 +224,31 @@ Make sure the following are installed:
 * Git
 
 1. Clone the Repository
+git clone <[YOUR_GITHUB_REPOSITORY_URL](https://github.com/samprikta1507/trekking-management-app-v2.git)>
+cd trekking-management-app-v2
+
+2. Start the Backend
+Open the backend directory:
+cd backend
+
+Activate the Python virtual environment:
+source env/bin/activate
+
+Run the Flask application:
+python app.py
+
+3. Start Redis
+Make sure the Redis server is running. You can verify the Redis connection using:
+redis-cli ping
+A successful setup should return: PONG
+
+4. Start the Frontend
+Open a new terminal and navigate to the frontend directory:
+cd frontend
+
+Install the required packages:
+npm install
+
+Start the Vue development server:
+npm run dev
+The frontend will then be available at the local development URL provided by Vite.
